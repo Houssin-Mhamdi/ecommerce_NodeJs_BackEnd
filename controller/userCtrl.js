@@ -11,6 +11,17 @@ const createUser = asyncHandler(async (req, res) => {
     throw new Error("User Already Exjsists");
   }
 });
+
+const loginUserCtrl = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  const findUser = await User.findOne({ email });
+  if (findUser && (await findUser.isPasswordMatched(password))) {
+    res.json({ message: "login sccessful", findUser });
+  } else {
+    throw new Error("user not found");
+  }
+});
 module.exports = {
   createUser,
+  loginUserCtrl,
 };
