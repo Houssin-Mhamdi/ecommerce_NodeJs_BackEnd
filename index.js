@@ -1,20 +1,13 @@
 const express = require("express");
-
-const sendMail = require("./sendEmails.js");
+const dotenv = require("dotenv").config();
+const dbConnect = require("./config/dbConnect.js");
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 4000;
+dbConnect();
 
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-app.post("/", (req, res) => {
-  const { from, text } = req.body;
-  if (!text) {
-    return res.status(422).send({ error: "You must provide a text" });
-  }
-  sendMail(from, text);
-});
-
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`);
 });
