@@ -3,6 +3,7 @@ const dotenv = require("dotenv").config();
 const connectToDB = require("./config/dbConnect.js");
 const bodyParser = require("body-parser");
 const authRoute = require("./routes/authRoute.js");
+const { notFound, errorHandler } = require("./middelwares/errorHandler.js");
 const app = express();
 const PORT = process.env.PORT || 4000;
 connectToDB();
@@ -13,6 +14,8 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 app.use("/api/user", authRoute);
 
+app.use(notFound);
+app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
