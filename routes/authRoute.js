@@ -8,14 +8,14 @@ const {
   deleteaUser,
   updateUser,
 } = require("../controller/userCtrl");
-const { authMiddleware } = require("../middelwares/authMiddelware");
+const { authMiddleware, isAdmin } = require("../middelwares/authMiddelware");
 
 router.post("/register", createUser);
 router.post("/login", loginUserCtrl);
 router.get("/all-users", getAllUsers);
 router
   .route("/:id")
-  .get(authMiddleware, getaUser)
+  .get(authMiddleware, isAdmin, getaUser)
   .delete(deleteaUser)
-  .put(updateUser);
+  .put(authMiddleware, isAdmin, updateUser);
 module.exports = router;
