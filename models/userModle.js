@@ -27,6 +27,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  cart: {
+    type: Array,
+    default: [],
+  },
+  address: [{ type: ObjectId, ref: "Address" }],
+  wishList: [{ type: ObjectId, ref: "Product" }],
 });
 
 userSchema.pre("save", function () {
