@@ -1,39 +1,44 @@
 const mongoose = require("mongoose"); // Erase if already required
 const bcrypt = require("bcrypt");
 // Declare the Schema of the Mongo model
-const userSchema = new mongoose.Schema({
-  firstname: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    mobile: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      default: "user",
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    cart: {
+      type: Array,
+      default: [],
+    },
+    address: [{ type: mongoose.Schema.Types.ObjectId, ref: "Address" }],
+    wishList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   },
-  lastname: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  mobile: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    default: "user",
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  cart: {
-    type: Array,
-    default: [],
-  },
-  address: [{ type: ObjectId, ref: "Address" }],
-  wishList: [{ type: ObjectId, ref: "Product" }],
-});
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.pre("save", function () {
   const salt = bcrypt.genSaltSync(10);
