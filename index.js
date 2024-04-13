@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const connectToDB = require("./config/dbConnect.js");
 const bodyParser = require("body-parser");
 const authRoute = require("./routes/authRoute.js");
+const productRoute = require("./routes/productRoute.js");
 const cookieParser = require("cookie-parser");
 const { notFound, errorHandler } = require("./middelwares/errorHandler.js");
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 app.use("/api/user", authRoute);
+app.use("/api/product", productRoute);
 
 app.use(notFound);
 app.use(errorHandler);
