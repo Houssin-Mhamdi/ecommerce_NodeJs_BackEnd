@@ -9,6 +9,6 @@ const {
 } = require("../controller/productCtrl");
 
 router.route("/").get(getAllProduct).post(createProduct);
-router.route("/:id").get(getaProduct).delete(deleteProduct);
-router.put("/:id", updateProduct);
+router.route("/:id").get(getaProduct).put(updateProduct).delete(deleteProduct);
+
 module.exports = router;
