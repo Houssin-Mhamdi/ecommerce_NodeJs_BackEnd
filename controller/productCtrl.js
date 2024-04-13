@@ -16,8 +16,44 @@ const createProduct = asyncHandler(async (req, res) => {
 });
 
 const getAllProduct = asyncHandler(async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
+  try {
+    const objQuery = { ...req.query };
+    const excludeFields = ["sort", "page", "limit", "fields"];
+    excludeFields.forEach((el) => delete objQuery[el]);
+    let queryStr = JSON.stringify(objQuery);
+    queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
+
+    let query = Product.find(JSON.parse(queryStr));
+
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      query.sort(sortBy);
+    } else {
+      query.sort("-createdAt");
+    }
+
+    const page = req.query.page;
+    const limit = req.query.limit;
+    const skip = (page - 1) * limit;
+    query = query.skip(skip).limit(limit);
+    if (req.query.page) {
+      const productCount = await Product.countDocuments();
+      if (skip >= productCount) {
+        throw new Error("Page out of range");
+      }
+    }
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query.select(fields);
+    } else {
+      query = query.select("-__v");
+    }
+
+    const products = await query;
+    res.json(products);
+  } catch (error) {
+    throw new Error(error);
+  }
 });
 
 const getaProduct = asyncHandler(async (req, res) => {
