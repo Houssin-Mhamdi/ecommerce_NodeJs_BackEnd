@@ -11,7 +11,66 @@ const createBlog = asyncHandler(async (req, res) => {
       message: "Blog created successfully",
       newBlog,
     });
-  } catch (err) {}
+  } catch (err) {
+    throw new Error(err);
+  }
 });
 
-module.exports = { createBlog };
+const getAllBlog = asyncHandler(async (req, res) => {
+  try {
+    const getBlog = await Blog.find();
+    res.json({
+      success: true,
+      message: "Get blog successfully",
+      getBlog,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+
+const updateBlog = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  try {
+    const updatedBlog = await Blog.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+    res.json({
+      success: true,
+      message: "Blog updated successfully",
+      updatedBlog,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+const deleteBlog = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  try {
+    const deletedBlog = await Blog.findByIdAndDelete(id);
+    res.json({
+      success: true,
+      message: "Blog deleted successfully",
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+const getBlog = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbId(id);
+  try {
+    const getBlog = await Blog.findById(id);
+    res.json({
+      success: true,
+      message: "Get blog successfully",
+      getBlog,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+
+module.exports = { createBlog, updateBlog, deleteBlog, getBlog, getAllBlog };
