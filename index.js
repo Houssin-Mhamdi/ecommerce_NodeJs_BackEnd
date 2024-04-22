@@ -5,6 +5,7 @@ const connectToDB = require("./config/dbConnect.js");
 const bodyParser = require("body-parser");
 const authRoute = require("./routes/authRoute.js");
 const productRoute = require("./routes/productRoute.js");
+const blogRoute = require("./routes/blogRoute.js");
 const cookieParser = require("cookie-parser");
 const { notFound, errorHandler } = require("./middelwares/errorHandler.js");
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true })); // for parsing application/x-ww
 
 app.use("/api/user", authRoute);
 app.use("/api/product", productRoute);
+app.use("/api/blog", blogRoute);
 
 app.use(notFound);
 app.use(errorHandler);
