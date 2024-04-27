@@ -10,11 +10,13 @@ const {
   deleteBlog,
   getAllBlogWithNumViews,
   likeBlog,
+  disliketheBlog,
 } = require("../controller/blogCtrl");
 
 router.route("/").get(getAllBlog).post(authMiddleware, isAdmin, createBlog);
 router.route("/all").get(getAllBlogWithNumViews);
 router.route("/likes").put(authMiddleware, likeBlog);
+router.route("/dislike").put(authMiddleware, disliketheBlog);
 router
   .route("/:id")
   .get(getBlog)
