@@ -73,25 +73,65 @@ const getBlog = asyncHandler(async (req, res) => {
     throw new Error(err);
   }
 });
-const getAllBlogWithNumViews= asyncHandler(async (req, res) => {
-    try {
-      const blogs = await Blog.find({ numViews: { $gt: 10 } });
-      res.json({
-        success: true,
-        message: "Get blogs with numViews greater than 10 successfully",
-        blogs,
-      });
-    } catch (err) {
-      throw new Error(err);
-    }
-  });
-  
-  module.exports = {
-    createBlog,
-    updateBlog,
-    deleteBlog,
-    getBlog,
-    getAllBlog,
-    getAllBlogWithNumViews,
-  };
+const getAllBlogWithNumViews = asyncHandler(async (req, res) => {
+  try {
+    const blogs = await Blog.find({ numViews: { $gt: 10 } });
+    res.json({
+      success: true,
+      message: "Get blogs with numViews greater than 10 successfully",
+      blogs,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
 
+const likeBlog = asyncHandler(async (req, res) => {
+  const { blogId } = req.body;
+  const blog = await Blog.findById(blogId);
+  const loginUserId = await req?.user?._id;
+  const isLiked =  blog?.isLiked;
+  const alreadyDisLiked = blog?.dislikes?.find(
+    (userId) => userId?.toString() === loginUserId?.toString()
+  );
+
+  if (alreadyDisLiked) {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      { $pull: { dislikes: loginUserId }, isDisliked: false },
+      { new: true }
+    );
+    res.json(blog);
+  }
+  if (isLiked) {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      { $pull: { likes: loginUserId }, isLiked: false },
+      { new: true }
+    );
+    res.json(blog);
+  } else {
+    const blog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        $push: { likes: loginUserId },
+        isLiked: true,
+      },
+      { new: true }
+    );
+    res.json(blog);
+  }
+
+});
+
+
+
+module.exports = {
+  createBlog,
+  updateBlog,
+  deleteBlog,
+  getBlog,
+  getAllBlog,
+  getAllBlogWithNumViews,
+  likeBlog,
+};

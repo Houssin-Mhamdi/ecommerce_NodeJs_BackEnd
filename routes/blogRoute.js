@@ -9,10 +9,12 @@ const {
   updateBlog,
   deleteBlog,
   getAllBlogWithNumViews,
+  likeBlog,
 } = require("../controller/blogCtrl");
 
 router.route("/").get(getAllBlog).post(authMiddleware, isAdmin, createBlog);
 router.route("/all").get(getAllBlogWithNumViews);
+router.route("/likes").put(authMiddleware, likeBlog);
 router
   .route("/:id")
   .get(getBlog)
