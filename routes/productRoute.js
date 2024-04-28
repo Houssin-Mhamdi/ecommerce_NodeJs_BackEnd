@@ -9,6 +9,7 @@ const {
   updateProduct,
   deleteProduct,
   addToWishList,
+  rating,
 } = require("../controller/productCtrl");
 
 router
@@ -17,6 +18,7 @@ router
   .post(authMiddleware, isAdmin, createProduct);
 
 router.put("/wishlist", authMiddleware, addToWishList);
+router.put("/rating", authMiddleware, rating);
 router
   .route("/:id")
   .get(getaProduct)
