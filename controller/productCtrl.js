@@ -1,4 +1,5 @@
 const Product = require("../models/productModle");
+const User = require("../models/userModle");
 const asyncHandler = require("express-async-handler");
 const { validateMongoDbId } = require("../utils/validateMongodbId.js");
 const slugify = require("slugify");
@@ -94,10 +95,67 @@ const deleteProduct = asyncHandler(async (req, res) => {
   }
 });
 
+const addToWishList = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { prodId } = req.body;
+  //method 1 its worked find
+  // try {
+  //   const user = await User.findById(_id);
+  //   const alreadyAddedToWishList = user.wishList.find(
+  //     (id) => id.toString() === prodId
+  //   );
+  //   if (alreadyAddedToWishList) {
+  //     const wishList = user.wishList.filter((id) => id.toString() !== prodId);
+  //     await User.findByIdAndUpdate(_id, { wishList });
+  //     res.json({ message: "Product removed to wishList" });
+  //   } else {
+  //     const wishList = [...user.wishList, prodId];
+  //     await User.findByIdAndUpdate(_id, { wishList });
+  //     res.json({ message: "Product added to wishList" });
+  //   }
+  // } catch (error) {
+  //   throw new Error(error);
+  // }
+  //method 2 its worked find
+  try {
+    const user = await User.findById(_id);
+    const alreadyAddedToWishList = user.wishList.find(
+      (id) => id.toString() === prodId
+    );
+    if (alreadyAddedToWishList) {
+      let user = await User.findByIdAndUpdate(
+        _id,
+        {
+          $pull: { wishList: prodId },
+        },
+        {
+          new: true,
+        }
+      );
+      res.json({ user, message: "Product removed to wishList" });
+    } else {
+      let user = await User.findByIdAndUpdate(
+        _id,
+        {
+          $push: { wishList: prodId },
+        },
+        {
+          new: true,
+        }
+      );
+      res.json({ user, message: "Product added to wishList" });
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+
+});
+
 module.exports = {
   createProduct,
   getAllProduct,
   getaProduct,
   updateProduct,
   deleteProduct,
+  addToWishList,
 };
