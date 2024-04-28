@@ -102,7 +102,7 @@ const getaUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMongoDbId(id);
   try {
-    const getaUser = await User.findById(id);
+    const getaUser = await User.findById(id).populate("wishList");
     res.json(getaUser);
   } catch (error) {
     throw new Error(error);
