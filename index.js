@@ -8,6 +8,7 @@ const productRoute = require("./routes/productRoute.js");
 const blogRoute = require("./routes/blogRoute.js");
 const prodCatRouter = require("./routes/prodCatRoute.js");
 const blogcategoryRouter = require("./routes/blogCatRoute.js");
+const brandRouter = require("./routes/brandRoute.js");
 const cookieParser = require("cookie-parser");
 const { notFound, errorHandler } = require("./middelwares/errorHandler.js");
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/product", productRoute);
 app.use("/api/blog", blogRoute);
 app.use("/api/category", prodCatRouter);
 app.use("/api/blogcategory", blogcategoryRouter);
+app.use("/api/brand", brandRouter);
 app.use(notFound);
 app.use(errorHandler);
 app.listen(PORT, () => {
