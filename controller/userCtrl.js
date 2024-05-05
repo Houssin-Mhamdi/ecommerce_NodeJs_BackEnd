@@ -212,6 +212,12 @@ const forgetPasswordToken = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+
+/**
+ * dont forget reset password
+ */
+
+
 module.exports = {
   createUser,
   loginUserCtrl,
